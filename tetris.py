@@ -15,6 +15,7 @@ tracemalloc.start()
 
 n = 0
 i = 0
+score = 0
 
 
 def ocupadac():
@@ -27,6 +28,7 @@ def ocupadac():
     return ocu
 ocupada=ocupadac()
 def repres(piezas):
+    global score
     mapa=mapac() 
     ocu1=ocupadac()
     for i, pieza in enumerate(piezas):
@@ -53,7 +55,9 @@ def repres(piezas):
                 ocu1[pieza.origenPx-1][pieza.origenPy+1]=True
     for i in range(10):
             print(" ".join(mapa[i]))
+    print("SCORE:"+ str(score))
     print("\n")
+    
     return ocu1
 
 
@@ -92,10 +96,15 @@ class pieza:
         if m==0: #rotacion
             print("No implementado nene")
         elif m==1:#tipo abajo
-            if (self.origenPx)<9:
+            if (self.origenPx)<9 and (self.tipo==3):
                 if ocupada[self.origenPx+1][self.origenPy]==False:
                     self.origenPx=self.origenPx+1
                 elif ocupada[self.origenPx+1][self.origenPy]==True: 
+                    self.tope=True
+            elif (self.origenPx)<9 and (self.tipo==2 or self.tipo==1):
+                if ocupada[self.origenPx+1][self.origenPy]==False and ocupada[self.origenPx+1][self.origenPy+1] == False:
+                    self.origenPx=self.origenPx+1
+                elif ocupada[self.origenPx+1][self.origenPy]==True or ocupada[self.origenPx+1][self.origenPy+1] ==True: 
                     self.tope=True
             elif (self.origenPx)==9:
                 self.tope=True
@@ -141,11 +150,12 @@ mapa=mapac()
 
 
 def tarea1(piezas):
-    global n, i, ocupada
+    global n, i, ocupada, score
     while True:
         time.sleep(1)
         piezas[n].movimiento(1)
         ocupada=repres(piezas)
+        score=score+5
         if (i >= 10 and i % 10 == 0) or (piezas[n].tope==True):
             nueva_pieza = pieza(random.randint(1, 3), 0, random.randint(0, 7))
             piezas.append(nueva_pieza)
@@ -172,52 +182,3 @@ hilo_entrada.start()
 
 hilo_actualizacion.join()
 hilo_entrada.join() 
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
